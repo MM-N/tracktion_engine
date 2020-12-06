@@ -48,6 +48,15 @@ jobs:
 
       # Upload test results
       - uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: test_results_${{ matrix.name }}
           path: ./bin/test_results/**/TEST-*.xml
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.6
+        if: always()
+        with:
+          check_name: Unit Test Results (${{ matrix.os }})          
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./bin/test_results/**/TEST-*.xml
