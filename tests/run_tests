@@ -86,7 +86,7 @@ function runTestApp()
         cd "$APP_ROOT"
 
         make clean
-        make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64" CPPFLAGS="GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}"
+        make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64" CPPFLAGS=-DGRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
 
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
         

@@ -50,8 +50,10 @@ jobs:
 
           if [[ ${{ github.event_name }} == 'schedule' ]]; then
             export DISABLE_TOOLS=0
+            export GRAPH_UNIT_TESTS_QUICK_VALIDATE=0
           else
             export DISABLE_TOOLS=1
+            export GRAPH_UNIT_TESTS_QUICK_VALIDATE=1
           fi
 
           ./tests/run_tests
