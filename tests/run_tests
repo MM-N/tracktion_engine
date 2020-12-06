@@ -54,13 +54,13 @@ function runTestApp()
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
         
         if [ "$2" != "DISABLE_TOOLS" ]; then
-            xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+            xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
             "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
-            xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+            xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
             "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
 
-            xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+            xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
         fi
     fi
 
@@ -74,7 +74,7 @@ function runTestApp()
         APP_EXE=$APP_ROOT/x64/Release/ConsoleApp/$APP_NAME.exe
         cd "$APP_ROOT"
 
-        "$MSBUILD_EXE" "$APP_NAME.sln" -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
+        "$MSBUILD_EXE" "$APP_NAME.sln" -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64 -p:GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
 
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
     fi
@@ -86,7 +86,7 @@ function runTestApp()
         cd "$APP_ROOT"
 
         make clean
-        make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64"
+        make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64" CPPFLAGS="GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}"
 
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
         
