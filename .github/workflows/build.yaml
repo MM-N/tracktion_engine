@@ -1,5 +1,9 @@
 name: Build
-on: [push]
+on:
+  schedule:
+    - cron: '* 0 * * *'
+  push:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -42,6 +46,12 @@ jobs:
             export DISABLE_VALGRIND=1
           elif [[ "$OSTYPE" == "msys" ]]; then
             export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
+          fi
+
+          if [[ ${{ github.event_name }} == 'schedule' ]]; then
+            export DISABLE_TOOLS=0
+          else
+            export DISABLE_TOOLS=1
           fi
 
           ./tests/run_tests
