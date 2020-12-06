@@ -49,5 +49,5 @@ jobs:
       # Upload test results
       - uses: actions/upload-artifact@v2
         with:
-          name: test_results
+          name: test_results_${{ matrix.name }}
           path: ./bin/test_results/**/TEST-*.xml
